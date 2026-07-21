@@ -1,0 +1,6 @@
+[tools]
+go = "1.26.5"
+node = "26.5.0"
+
+[tools."go:github.com/wailsapp/wails/v3/cmd/wails3"]
+version = "latest"
