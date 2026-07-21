@@ -6,6 +6,8 @@ import (
 	"log"
 	"time"
 
+	"app/db"
+
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -29,6 +31,12 @@ func init() {
 // logs any error that might occur.
 func main() {
 
+	// Initialize database
+	if err := db.Init(); err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+	}
+	defer db.Close()
+
 	// Create a new Wails application by providing the necessary options.
 	// Variables 'Name' and 'Description' are for application metadata.
 	// 'Assets' configures the asset server with the 'FS' variable pointing to the frontend files.
@@ -38,7 +46,7 @@ func main() {
 		Name:        "hmm",
 		Description: "humans messaging machines",
 		Services: []application.Service{
-			application.NewService(&GreetService{}),
+			application.NewService(&ProviderService{}),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

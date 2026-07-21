@@ -1,6 +1,7 @@
 [tools]
 go = "1.26.5"
+"go:github.com/sqlc-dev/sqlc/cmd/sqlc" = "latest"
+"go:github.com/wailsapp/wails/v3/cmd/wails3" = "latest"
+
 node = "26.5.0"
 
-[tools."go:github.com/wailsapp/wails/v3/cmd/wails3"]
-version = "latest"

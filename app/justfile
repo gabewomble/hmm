@@ -1,2 +1,7 @@
 dev:
+    sqlc generate
     wails3 dev
+
+build:
+    sqlc generate
+    wails3 build
