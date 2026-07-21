@@ -10,17 +10,21 @@ import { Call as $Call, CancellablePromise as $CancellablePromise } from "@wails
 import * as $models from "./models.js";
 
 export function CreateProvider(input: $models.ProviderInput): $CancellablePromise<$models.ProviderResponse> {
-    return $Call.ByID(1841495485, input);
+    return $Call.ByID(4186712969, input);
 }
 
 export function DeleteProvider(id: string): $CancellablePromise<void> {
-    return $Call.ByID(4291218382, id);
+    return $Call.ByID(776750002, id);
 }
 
 export function GetProvider(id: string): $CancellablePromise<$models.ProviderResponse> {
-    return $Call.ByID(2555477485, id);
+    return $Call.ByID(977840529, id);
 }
 
 export function ListProviders(): $CancellablePromise<$models.ProviderResponse[] | null> {
-    return $Call.ByID(990855086);
+    return $Call.ByID(1706810602);
+}
+
+export function UpdateProvider(id: string, input: $models.ProviderInput): $CancellablePromise<$models.ProviderResponse> {
+    return $Call.ByID(2978561824, id, input);
 }

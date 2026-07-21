@@ -3,7 +3,7 @@
 //   sqlc v1.27.0
 // source: providers.sql
 
-package db
+package local_store
 
 import (
 	"context"
@@ -12,7 +12,6 @@ import (
 
 const createProvider = `-- name: CreateProvider :one
 INSERT INTO providers (
-    id,
     name,
     provider_type,
     base_url,
@@ -25,13 +24,11 @@ INSERT INTO providers (
     ?,
     ?,
     ?,
-    ?,
     ?
 ) RETURNING id, name, provider_type, base_url, api_key, created_at, updated_at
 `
 
 type CreateProviderParams struct {
-	ID           string
 	Name         string
 	ProviderType string
 	BaseUrl      sql.NullString
@@ -42,7 +39,6 @@ type CreateProviderParams struct {
 
 func (q *Queries) CreateProvider(ctx context.Context, arg CreateProviderParams) (Provider, error) {
 	row := q.db.QueryRowContext(ctx, createProvider,
-		arg.ID,
 		arg.Name,
 		arg.ProviderType,
 		arg.BaseUrl,

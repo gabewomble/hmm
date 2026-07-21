@@ -1,5 +1,5 @@
 import { MantineProvider, Button, Stack, Title, Text, Container } from "@mantine/core";
-import { CreateProvider, ListProviders } from "../bindings/app/providerservice";
+import { CreateProvider, ListProviders } from "../bindings/app/provider_service/providerservice";
 
 function App() {
   const handleListProviders = async () => {

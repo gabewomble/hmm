@@ -1,9 +1,9 @@
 version: "2"
 sql:
   - engine: "sqlite"
-    schema: "db/migrations/"
-    queries: "db/queries/"
+    schema: "local_store/migrations/"
+    queries: "local_store/queries/"
     gen:
       go:
-        package: "db"
-        out: "db"
+        package: "local_store"
+        out: "local_store"

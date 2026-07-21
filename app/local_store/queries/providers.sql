@@ -1,6 +1,5 @@
 -- name: CreateProvider :one
 INSERT INTO providers (
-    id,
     name,
     provider_type,
     base_url,
@@ -8,7 +7,6 @@ INSERT INTO providers (
     created_at,
     updated_at
 ) VALUES (
-    ?,
     ?,
     ?,
     ?,

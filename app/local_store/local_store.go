@@ -1,4 +1,4 @@
-package db
+package local_store
 
 import (
 	"database/sql"
@@ -17,47 +17,49 @@ import (
 //go:embed migrations/*.sql
 var migrationsFS embed.FS
 
-var database *sql.DB
+type LocalStore struct {
+	db      *sql.DB
+	queries *Queries
+}
 
-func Init() error {
+func Open() (*LocalStore, error) {
 	dbDir := filepath.Join(xdg.DataHome, "hmm")
 	dbPath := filepath.Join(dbDir, "hmm.db")
 
 	if err := os.MkdirAll(dbDir, 0755); err != nil {
-		return fmt.Errorf("failed to create database directory: %w", err)
+		return nil, fmt.Errorf("failed to create database directory: %w", err)
 	}
 
-	var err error
-	database, err = sql.Open("sqlite", dbPath)
+	conn, err := sql.Open("sqlite", dbPath)
 	if err != nil {
-		return fmt.Errorf("failed to open database: %w", err)
+		return nil, fmt.Errorf("failed to open database: %w", err)
 	}
 
-	if err := database.Ping(); err != nil {
-		return fmt.Errorf("failed to ping database: %w", err)
+	if err := conn.Ping(); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("failed to ping database: %w", err)
 	}
 
-	if err := runMigrations(); err != nil {
-		return fmt.Errorf("failed to run migrations: %w", err)
+	store := &LocalStore{db: conn, queries: New(conn)}
+
+	if err := store.runMigrations(); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("failed to run migrations: %w", err)
 	}
 
 	log.Printf("Database initialized at %s", dbPath)
-	return nil
+	return store, nil
 }
 
-func Close() error {
-	if database != nil {
-		return database.Close()
+func (s *LocalStore) Close() error {
+	if s.db != nil {
+		return s.db.Close()
 	}
 	return nil
 }
 
-func DB() *sql.DB {
-	return database
-}
-
-func runMigrations() error {
-	if _, err := database.Exec(`CREATE TABLE IF NOT EXISTS schema_migrations (name TEXT PRIMARY KEY, applied_at INTEGER NOT NULL DEFAULT (unixepoch()))`); err != nil {
+func (s *LocalStore) runMigrations() error {
+	if _, err := s.db.Exec(`CREATE TABLE IF NOT EXISTS schema_migrations (name TEXT PRIMARY KEY, applied_at INTEGER NOT NULL DEFAULT (unixepoch()))`); err != nil {
 		return fmt.Errorf("failed to create migrations table: %w", err)
 	}
 
@@ -78,7 +80,7 @@ func runMigrations() error {
 		name := entry.Name()
 
 		var applied bool
-		if err := database.QueryRow("SELECT 1 FROM schema_migrations WHERE name = ?", name).Scan(&applied); err == nil {
+		if err := s.db.QueryRow("SELECT 1 FROM schema_migrations WHERE name = ?", name).Scan(&applied); err == nil {
 			continue
 		}
 
@@ -87,11 +89,11 @@ func runMigrations() error {
 			return fmt.Errorf("failed to read migration %s: %w", name, err)
 		}
 
-		if _, err := database.Exec(string(content)); err != nil {
+		if _, err := s.db.Exec(string(content)); err != nil {
 			return fmt.Errorf("failed to execute migration %s: %w", name, err)
 		}
 
-		if _, err := database.Exec("INSERT INTO schema_migrations (name) VALUES (?)", name); err != nil {
+		if _, err := s.db.Exec("INSERT INTO schema_migrations (name) VALUES (?)", name); err != nil {
 			return fmt.Errorf("failed to record migration %s: %w", name, err)
 		}
 
