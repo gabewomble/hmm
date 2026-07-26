@@ -42,7 +42,7 @@ func main() {
 	})
 
 	app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title: "hmm",
+		Title:  "hmm",
 		Width:  1000,
 		Height: 618,
 		Mac: application.MacWindow{

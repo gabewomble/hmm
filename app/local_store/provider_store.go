@@ -5,11 +5,18 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func (s *LocalStore) CreateProvider(ctx context.Context, params storage.CreateProviderParams) (storage.Provider, error) {
+	id, err := uuid.NewV7()
+	if err != nil {
+		return storage.Provider{}, err
+	}
 	now := time.Now().Unix()
 	result, err := s.queries.CreateProvider(ctx, CreateProviderParams{
+		ID:           id.String(),
 		Name:         params.Name,
 		ProviderType: params.ProviderType,
 		BaseUrl:      toNullString(params.BaseURL),

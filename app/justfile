@@ -1,16 +1,23 @@
 set default-list := true
 
+# Run code generation and start dev server
 dev:
     sqlc generate
     wails3 dev
 
+# Run code generation and build the app
 build:
     sqlc generate
     wails3 build
 
-check: _check-frontend
+# Run all linters and type checkers
+check: _check-frontend _check-go
 
-fmt: _fmt-frontend
+# Format all source code
+fmt: _fmt-frontend _fmt-go
+
+# Run all tests
+test: _test-go
 
 [working-directory: 'frontend']
 _check-frontend:
@@ -19,3 +26,12 @@ _check-frontend:
 [working-directory: 'frontend']
 _fmt-frontend:
     npm run check -- --write
+
+_check-go:
+    go vet ./...
+
+_fmt-go:
+    go fmt ./...
+
+_test-go:
+    go test ./...

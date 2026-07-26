@@ -1,5 +1,5 @@
 CREATE TABLE providers (
-    id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+    id TEXT PRIMARY KEY,
     name TEXT NOT NULL,                          -- Friendly name (e.g., "My Claude API")
     provider_type TEXT NOT NULL,                 -- 'openai', 'anthropic', 'google', 'local'
     
