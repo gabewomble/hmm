@@ -3,6 +3,7 @@ package provider_service
 import (
 	"app/storage"
 	"context"
+	"time"
 )
 
 type ProviderService struct {
@@ -17,13 +18,13 @@ type ProviderInput struct {
 }
 
 type ProviderResponse struct {
-	ID           string  `json:"id"`
-	Name         string  `json:"name"`
-	ProviderType string  `json:"providerType"`
-	BaseURL      *string `json:"baseUrl"`
-	APIKey       *string `json:"apiKey"`
-	CreatedAt    int64   `json:"createdAt"`
-	UpdatedAt    int64   `json:"updatedAt"`
+	ID           string    `json:"id"`
+	Name         string    `json:"name"`
+	ProviderType string    `json:"providerType"`
+	BaseURL      *string   `json:"baseUrl"`
+	APIKey       *string   `json:"apiKey"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 }
 
 func New(store storage.ProviderStore) *ProviderService {

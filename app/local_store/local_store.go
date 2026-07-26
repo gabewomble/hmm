@@ -42,7 +42,7 @@ func Open() (*LocalStore, error) {
 
 	store := &LocalStore{db: conn, queries: New(conn)}
 
-	if err := store.runMigrations(); err != nil {
+	if err := store.runMigrations(true); err != nil {
 		conn.Close()
 		return nil, fmt.Errorf("failed to run migrations: %w", err)
 	}
@@ -58,7 +58,7 @@ func (s *LocalStore) Close() error {
 	return nil
 }
 
-func (s *LocalStore) runMigrations() error {
+func (s *LocalStore) runMigrations(verbose bool) error {
 	if _, err := s.db.Exec(`CREATE TABLE IF NOT EXISTS schema_migrations (name TEXT PRIMARY KEY, applied_at INTEGER NOT NULL DEFAULT (unixepoch()))`); err != nil {
 		return fmt.Errorf("failed to create migrations table: %w", err)
 	}
@@ -97,7 +97,9 @@ func (s *LocalStore) runMigrations() error {
 			return fmt.Errorf("failed to record migration %s: %w", name, err)
 		}
 
-		log.Printf("Applied migration: %s", name)
+		if verbose {
+			log.Printf("Applied migration: %s", name)
+		}
 	}
 
 	return nil

@@ -8,6 +8,7 @@ package local_store
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const createProvider = `-- name: CreateProvider :one
@@ -36,8 +37,8 @@ type CreateProviderParams struct {
 	ProviderType string
 	BaseUrl      sql.NullString
 	ApiKey       sql.NullString
-	CreatedAt    int64
-	UpdatedAt    int64
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 func (q *Queries) CreateProvider(ctx context.Context, arg CreateProviderParams) (Provider, error) {
@@ -142,7 +143,7 @@ type UpdateProviderParams struct {
 	ProviderType string
 	BaseUrl      sql.NullString
 	ApiKey       sql.NullString
-	UpdatedAt    int64
+	UpdatedAt    time.Time
 	ID           string
 }
 

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"testing"
+	"time"
 )
 
 type mockProviderStore struct {
@@ -35,8 +36,8 @@ func (m *mockProviderStore) CreateProvider(_ context.Context, params storage.Cre
 		ProviderType: params.ProviderType,
 		BaseURL:      params.BaseURL,
 		APIKey:       params.APIKey,
-		CreatedAt:    1000,
-		UpdatedAt:    1000,
+		CreatedAt:    time.Unix(1000, 0),
+		UpdatedAt:    time.Unix(1000, 0),
 	}
 	m.providers[p.ID] = p
 	return p, nil
@@ -76,7 +77,7 @@ func (m *mockProviderStore) UpdateProvider(_ context.Context, params storage.Upd
 	p.ProviderType = params.ProviderType
 	p.BaseURL = params.BaseURL
 	p.APIKey = params.APIKey
-	p.UpdatedAt = 2000
+	p.UpdatedAt = time.Unix(2000, 0)
 	m.providers[params.ID] = p
 	return p, nil
 }

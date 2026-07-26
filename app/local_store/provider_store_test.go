@@ -3,34 +3,13 @@ package local_store
 import (
 	"app/storage"
 	"context"
-	"database/sql"
 	"testing"
 
 	"github.com/google/uuid"
-	_ "modernc.org/sqlite"
 )
 
 func newTestStore(t *testing.T) *LocalStore {
-	t.Helper()
-	db, err := sql.Open("sqlite", ":memory:")
-	if err != nil {
-		t.Fatalf("failed to open in-memory db: %v", err)
-	}
-	t.Cleanup(func() { db.Close() })
-
-	if _, err := db.Exec(`CREATE TABLE providers (
-		id TEXT PRIMARY KEY,
-		name TEXT NOT NULL,
-		provider_type TEXT NOT NULL,
-		base_url TEXT,
-		api_key TEXT,
-		created_at INTEGER NOT NULL DEFAULT (unixepoch()),
-		updated_at INTEGER NOT NULL DEFAULT (unixepoch())
-	)`); err != nil {
-		t.Fatalf("failed to create table: %v", err)
-	}
-
-	return &LocalStore{db: db, queries: New(db)}
+	return NewTestStore(t)
 }
 
 func TestCreateProvider_GeneratesUUIDv7(t *testing.T) {
@@ -78,7 +57,7 @@ func TestCreateProvider_RoundTrip(t *testing.T) {
 	if created.APIKey == nil || *created.APIKey != apiKey {
 		t.Errorf("APIKey = %v, want %q", created.APIKey, apiKey)
 	}
-	if created.CreatedAt == 0 {
+	if created.CreatedAt.IsZero() {
 		t.Error("CreatedAt should be non-zero")
 	}
 

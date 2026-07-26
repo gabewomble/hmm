@@ -14,7 +14,7 @@ func (s *LocalStore) CreateProvider(ctx context.Context, params storage.CreatePr
 	if err != nil {
 		return storage.Provider{}, err
 	}
-	now := time.Now().Unix()
+	now := time.Now()
 	result, err := s.queries.CreateProvider(ctx, CreateProviderParams{
 		ID:           id.String(),
 		Name:         params.Name,
@@ -57,7 +57,7 @@ func (s *LocalStore) UpdateProvider(ctx context.Context, params storage.UpdatePr
 		ProviderType: params.ProviderType,
 		BaseUrl:      toNullString(params.BaseURL),
 		ApiKey:       toNullString(params.APIKey),
-		UpdatedAt:    time.Now().Unix(),
+		UpdatedAt:    time.Now(),
 	})
 	if err != nil {
 		return storage.Provider{}, err

@@ -8,8 +8,8 @@ CREATE TABLE providers (
     api_key TEXT,                                -- Encrypted or plain text API key (Null for local authless setups)
     
     -- Metadata
-    created_at INTEGER NOT NULL DEFAULT (unixepoch()),
-    updated_at INTEGER NOT NULL DEFAULT (unixepoch())
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexing for quick lookups

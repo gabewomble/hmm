@@ -6,7 +6,24 @@ package local_store
 
 import (
 	"database/sql"
+	"time"
 )
+
+type Conversation struct {
+	ID        string
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Message struct {
+	ID             string
+	ConversationID string
+	Body           string
+	MessageType    string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+}
 
 type Provider struct {
 	ID           string
@@ -14,6 +31,6 @@ type Provider struct {
 	ProviderType string
 	BaseUrl      sql.NullString
 	ApiKey       sql.NullString
-	CreatedAt    int64
-	UpdatedAt    int64
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }

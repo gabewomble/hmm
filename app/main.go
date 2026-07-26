@@ -6,7 +6,9 @@ import (
 	"log"
 	"time"
 
+	"app/conversation_service"
 	"app/local_store"
+	"app/message_service"
 	"app/provider_service"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
@@ -32,6 +34,8 @@ func main() {
 		Description: "humans messaging machines",
 		Services: []application.Service{
 			application.NewService(provider_service.New(store)),
+			application.NewService(conversation_service.New(store)),
+			application.NewService(message_service.New(store)),
 		},
 		Assets: application.AssetOptions{
 			Handler: application.AssetFileServerFS(assets),

@@ -1,6 +1,9 @@
 package storage
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 type Provider struct {
 	ID           string
@@ -8,8 +11,8 @@ type Provider struct {
 	ProviderType string
 	BaseURL      *string
 	APIKey       *string
-	CreatedAt    int64
-	UpdatedAt    int64
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type CreateProviderParams struct {

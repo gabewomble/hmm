@@ -14,6 +14,6 @@ export interface ProviderResponse {
     "providerType": string;
     "baseUrl": string | null;
     "apiKey": string | null;
-    "createdAt": number;
-    "updatedAt": number;
+    "createdAt": string;
+    "updatedAt": string;
 }
