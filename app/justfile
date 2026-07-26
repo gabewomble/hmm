@@ -1,3 +1,5 @@
+set default-list := true
+
 dev:
     sqlc generate
     wails3 dev
