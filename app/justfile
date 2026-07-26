@@ -5,3 +5,15 @@ dev:
 build:
     sqlc generate
     wails3 build
+
+check: _check-frontend
+
+fmt: _fmt-frontend
+
+[working-directory: 'frontend']
+_check-frontend:
+    npm run check
+
+[working-directory: 'frontend']
+_fmt-frontend:
+    npm run check -- --write
