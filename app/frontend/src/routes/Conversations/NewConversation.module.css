@@ -1,0 +1,25 @@
+.container {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.spacer {
+	flex: 1;
+}
+
+.errorArea {
+	padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+	background-color: light-dark(var(--mantine-color-red-0), var(--mantine-color-red-9));
+	border-top: 1px solid light-dark(var(--mantine-color-red-3), var(--mantine-color-red-7));
+}
+
+.inputArea {
+	border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+	padding: var(--mantine-spacing-md);
+	background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+}
+
+.textarea {
+	flex: 1;
+}

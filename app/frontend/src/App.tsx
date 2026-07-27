@@ -1,4 +1,5 @@
 import { MantineProvider } from "@mantine/core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // core styles are required for all packages
 import "@mantine/core/styles.css";
@@ -10,11 +11,15 @@ import AppRoutes from "./routes";
 // import '@mantine/dropzone/styles.css';
 // import '@mantine/code-highlight/styles.css';
 
+const queryClient = new QueryClient();
+
 function App() {
 	return (
-		<MantineProvider defaultColorScheme="auto">
-			<AppRoutes />
-		</MantineProvider>
+		<QueryClientProvider client={queryClient}>
+			<MantineProvider defaultColorScheme="auto">
+				<AppRoutes />
+			</MantineProvider>
+		</QueryClientProvider>
 	);
 }
 

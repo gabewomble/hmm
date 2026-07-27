@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import react from "@vitejs/plugin-react";
 import wails from "@wailsio/runtime/plugins/vite";
 import { defineConfig } from "vite";
@@ -10,4 +11,9 @@ export default defineConfig({
 		strictPort: true,
 	},
 	plugins: [react(), wails("./bindings")],
+	test: {
+		environment: "jsdom",
+		globals: true,
+		setupFiles: "./vitest.setup.mjs",
+	},
 });

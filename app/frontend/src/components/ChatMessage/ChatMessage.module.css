@@ -1,0 +1,15 @@
+.message {
+	max-width: 70%;
+	word-wrap: break-word;
+}
+
+.user {
+	margin-left: auto;
+	background-color: var(--mantine-color-blue-filled);
+	color: var(--mantine-color-white);
+}
+
+.llm {
+	margin-right: auto;
+	background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6));
+}

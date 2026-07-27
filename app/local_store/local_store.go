@@ -35,6 +35,21 @@ func Open() (*LocalStore, error) {
 		return nil, fmt.Errorf("failed to open database: %w", err)
 	}
 
+	// SQLite-specific configuration
+	conn.SetMaxOpenConns(1) // SQLite only supports one writer at a time
+
+	// Enable WAL mode for better concurrent read/write performance
+	if _, err := conn.Exec("PRAGMA journal_mode=WAL"); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("failed to enable WAL mode: %w", err)
+	}
+
+	// Set busy timeout to wait up to 5 seconds when database is locked
+	if _, err := conn.Exec("PRAGMA busy_timeout=5000"); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("failed to set busy timeout: %w", err)
+	}
+
 	if err := conn.Ping(); err != nil {
 		conn.Close()
 		return nil, fmt.Errorf("failed to ping database: %w", err)

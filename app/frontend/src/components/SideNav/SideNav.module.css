@@ -11,7 +11,7 @@
 }
 
 .logo {
-  margin-bottom: var(--mantine-spacing-xl);
+  margin-bottom: var(--mantine-spacing-md);
   display: flex;
   align-items: center;
   gap: var(--mantine-spacing-sm);
@@ -44,4 +44,9 @@
     background-color: var(--mantine-color-blue-filled);
     color: var(--mantine-color-white);
   }
+}
+
+.conversationsScroll {
+  flex: 1;
+  margin: var(--mantine-spacing-sm) 0;
 }

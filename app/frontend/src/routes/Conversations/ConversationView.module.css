@@ -1,0 +1,21 @@
+.container {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.messagesArea {
+	flex: 1;
+	overflow-y: auto;
+	padding: var(--mantine-spacing-md);
+}
+
+.inputArea {
+	border-top: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+	padding: var(--mantine-spacing-md);
+	background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
+}
+
+.textarea {
+	flex: 1;
+}
