@@ -3,6 +3,7 @@ package local_store
 import (
 	"app/storage"
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,18 +11,53 @@ import (
 
 // Creates a new conversation
 func (s *LocalStore) CreateConversation(ctx context.Context, params storage.CreateConversationParams) (storage.Conversation, error) {
-	id, err := uuid.NewV7()
+	conversationId, err := uuid.NewV7()
 	if err != nil {
 		return storage.Conversation{}, err
 	}
 
 	now := time.Now()
-	result, err := s.queries.CreateConversation(ctx, CreateConversationParams{
-		ID:        id.String(),
+
+	tx, err := s.db.BeginTx(ctx, &sql.TxOptions{})
+
+	if err != nil {
+		return storage.Conversation{}, err
+	}
+
+	defer tx.Rollback()
+
+	qtx := s.queries.WithTx(tx)
+
+	result, err := qtx.CreateConversation(ctx, CreateConversationParams{
+		ID:        conversationId.String(),
 		Name:      params.Name,
 		CreatedAt: now,
 		UpdatedAt: now,
 	})
+
+	if err != nil {
+		return storage.Conversation{}, err
+	}
+
+	if params.MessageBody != "" {
+		messageId, err := uuid.NewV7()
+		if err != nil {
+			return storage.Conversation{}, err
+		}
+
+		if _, err := qtx.CreateMessage(ctx, CreateMessageParams{
+			ID:             messageId.String(),
+			ConversationID: conversationId.String(),
+			Body:           params.MessageBody,
+			MessageType:    string(storage.MessageTypeUser),
+			CreatedAt:      now,
+			UpdatedAt:      now,
+		}); err != nil {
+			return storage.Conversation{}, err
+		}
+	}
+
+	err = tx.Commit()
 
 	if err != nil {
 		return storage.Conversation{}, err

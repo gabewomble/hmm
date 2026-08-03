@@ -12,13 +12,6 @@ vi.mock("../../api/conversations", () => ({
 	}),
 }));
 
-vi.mock("../../api/messages", () => ({
-	useCreateMessage: () => ({
-		mutate: vi.fn(),
-		isPending: false,
-	}),
-}));
-
 vi.mock("react-router", () => ({
 	useNavigate: () => vi.fn(),
 }));

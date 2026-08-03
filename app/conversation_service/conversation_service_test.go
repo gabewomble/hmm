@@ -53,7 +53,8 @@ func TestCreateConversation(t *testing.T) {
 	svc := New(store)
 
 	resp, err := svc.CreateConversation(CreateConversationRequest{
-		Name: "Test Conversation",
+		Name:        "Test Conversation",
+		MessageBody: "Hello",
 	})
 	if err != nil {
 		t.Fatalf("CreateConversation failed: %v", err)

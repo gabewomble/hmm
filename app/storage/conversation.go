@@ -15,6 +15,8 @@ type Conversation struct {
 type CreateConversationParams struct {
 	// Name of the conversation
 	Name string
+	// Body of message which creates conversation
+	MessageBody string
 }
 
 type ConversationStore interface {

@@ -26,6 +26,34 @@ func TestCreateConversation_GeneratesUUIDv7(t *testing.T) {
 	}
 }
 
+func TestCreateConversation_CreatesMessage(t *testing.T) {
+	store := NewTestStore(t)
+	c, err := store.CreateConversation(context.Background(), storage.CreateConversationParams{
+		Name:        "Test Conversation",
+		MessageBody: "Hello, world!",
+	})
+
+	if err != nil {
+		t.Fatalf("CreateConversation failed: %v", err)
+	}
+
+	messages, err := store.ListMessagesByConversation(context.Background(), storage.ListMessagesByConversationParams{ConversationId: c.ID})
+
+	if err != nil {
+		t.Fatalf("ListMessagesByConversation failed: %v", err)
+	}
+
+	if len(messages) != 1 {
+		t.Fatalf("expected 1 message, got %d", len(messages))
+	}
+
+	message := messages[0]
+
+	if message.Body != "Hello, world!" {
+		t.Fatalf("unexpected message body: %v", message.Body)
+	}
+}
+
 func TestCreateConversation_RoundTrip(t *testing.T) {
 	store := NewTestStore(t)
 

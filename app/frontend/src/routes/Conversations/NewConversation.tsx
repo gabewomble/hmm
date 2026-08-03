@@ -3,37 +3,24 @@ import { Send } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useCreateConversation } from "../../api/conversations";
-import { useCreateMessage } from "../../api/messages";
 import classes from "./NewConversation.module.css";
 
 export default function NewConversation() {
 	const navigate = useNavigate();
 	const createConversation = useCreateConversation();
-	const createMessage = useCreateMessage();
 	const [input, setInput] = useState("");
 	const [error, setError] = useState<string | null>(null);
-	const isPending = createConversation.isPending || createMessage.isPending;
+	const isPending = createConversation.isPending;
 
 	const handleSubmit = () => {
 		if (!input.trim()) return;
 
 		setError(null);
 		createConversation.mutate(
-			{ name: "New Conversation" },
+			{ name: input.trim(), messageBody: input.trim() },
 			{
 				onSuccess: (conversation) => {
-					createMessage.mutate(
-						{ conversationId: conversation.id, body: input.trim() },
-						{
-							onSuccess: () => {
-								navigate(`/conversations/${conversation.id}`);
-							},
-							onError: () => {
-								setError("Failed to send message. Please try again.");
-								navigate(`/conversations/${conversation.id}`);
-							},
-						},
-					);
+					navigate(`/conversations/${conversation.id}`);
 				},
 				onError: () => {
 					setError("Failed to create conversation. Please try again.");

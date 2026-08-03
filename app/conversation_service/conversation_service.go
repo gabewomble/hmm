@@ -17,7 +17,8 @@ func New(store storage.ConversationStore) *ConversationService {
 }
 
 type CreateConversationRequest struct {
-	Name string `json:"name"`
+	Name        string `json:"name"`
+	MessageBody string `json:"messageBody"`
 }
 
 type ConversationResponse struct {
@@ -30,7 +31,8 @@ type ConversationResponse struct {
 // Create a new conversation
 func (s *ConversationService) CreateConversation(input CreateConversationRequest) (ConversationResponse, error) {
 	result, err := s.store.CreateConversation(context.Background(), storage.CreateConversationParams{
-		Name: input.Name,
+		Name:        input.Name,
+		MessageBody: input.MessageBody,
 	})
 
 	if err != nil {

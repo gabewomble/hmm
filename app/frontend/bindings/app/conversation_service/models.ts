@@ -10,4 +10,5 @@ export interface ConversationResponse {
 
 export interface CreateConversationRequest {
     "name": string;
+    "messageBody": string;
 }
