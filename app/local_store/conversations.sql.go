@@ -48,6 +48,15 @@ func (q *Queries) CreateConversation(ctx context.Context, arg CreateConversation
 	return i, err
 }
 
+const deleteConversation = `-- name: DeleteConversation :exec
+DELETE FROM conversations WHERE id = ?
+`
+
+func (q *Queries) DeleteConversation(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, deleteConversation, id)
+	return err
+}
+
 const listConversations = `-- name: ListConversations :many
 SELECT id, name, created_at, updated_at FROM conversations ORDER BY updated_at DESC
 `

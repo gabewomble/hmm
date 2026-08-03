@@ -42,6 +42,17 @@ func (s *ConversationService) CreateConversation(input CreateConversationRequest
 	return toResponse(result), nil
 }
 
+type DeleteConversationRequest struct {
+	ConversationId string `json:"conversationId"`
+}
+
+// Deletes a conversation
+func (s *ConversationService) DeleteConversation(input DeleteConversationRequest) error {
+	return s.store.DeleteConversation(context.Background(), storage.DeleteConversationParams{
+		ConversationId: input.ConversationId,
+	})
+}
+
 // Lists conversations
 func (s *ConversationService) ListConversations() ([]ConversationResponse, error) {
 	result, err := s.store.ListConversations(context.Background())

@@ -2,7 +2,7 @@ import { MantineProvider } from "@mantine/core";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
-import { MessageType } from "../../../bindings/app/storage/models";
+import { MessageType } from "#bindings/app/storage/models";
 import ChatMessage from "./ChatMessage";
 
 function renderWithMantine(ui: React.ReactElement) {

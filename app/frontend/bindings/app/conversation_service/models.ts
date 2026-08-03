@@ -12,3 +12,7 @@ export interface CreateConversationRequest {
     "name": string;
     "messageBody": string;
 }
+
+export interface DeleteConversationRequest {
+    "conversationId": string;
+}

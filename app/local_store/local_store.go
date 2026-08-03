@@ -38,6 +38,11 @@ func Open() (*LocalStore, error) {
 	// SQLite-specific configuration
 	conn.SetMaxOpenConns(1) // SQLite only supports one writer at a time
 
+	// Enable foreign_keys
+	if _, err := conn.Exec("PRAGMA foreign_keys = ON"); err != nil {
+		return nil, fmt.Errorf("enable foreign keys: %w", err)
+	}
+
 	// Enable WAL mode for better concurrent read/write performance
 	if _, err := conn.Exec("PRAGMA journal_mode=WAL"); err != nil {
 		conn.Close()

@@ -74,6 +74,55 @@ func TestCreateConversation_RoundTrip(t *testing.T) {
 	}
 }
 
+func TestDeleteConversation(t *testing.T) {
+	store := NewTestStore(t)
+
+	conversation, err := store.CreateConversation(context.Background(), storage.CreateConversationParams{
+		Name:        "Test",
+		MessageBody: "Hello",
+	})
+
+	if err != nil {
+		t.Fatalf("CreateConversation failed: %v", err)
+	}
+
+	messages, err := store.ListMessagesByConversation(context.Background(), storage.ListMessagesByConversationParams{ConversationId: conversation.ID})
+	if err != nil {
+		t.Fatalf("ListMessagesByConversation failed: %v", err)
+	}
+
+	if len(messages) != 1 {
+		t.Fatalf("expected 1 messages, received: %d", len(messages))
+	}
+
+	err = store.DeleteConversation(context.Background(), storage.DeleteConversationParams{
+		ConversationId: conversation.ID,
+	})
+
+	if err != nil {
+		t.Fatalf("DeleteConversation failed: %v", err)
+	}
+
+	conversations, err := store.ListConversations(context.Background())
+	if err != nil {
+		t.Fatalf("ListConversations failed: %v", err)
+	}
+
+	if len(conversations) != 0 {
+		t.Fatalf("expected 0 conversations, received: %d", len(conversations))
+	}
+
+	messages, err = store.ListMessagesByConversation(context.Background(), storage.ListMessagesByConversationParams{ConversationId: conversation.ID})
+	if err != nil {
+		// May be expected akshually
+		t.Fatalf("ListMessagesByConversation failed: %v", err)
+	}
+
+	if len(messages) != 0 {
+		t.Fatalf("expected 0 messages, received: %d", len(messages))
+	}
+}
+
 func TestListConversations(t *testing.T) {
 	store := NewTestStore(t)
 

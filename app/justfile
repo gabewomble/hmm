@@ -1,9 +1,5 @@
 set default-list := true
 
-# Run code generation and start dev server
-dev:
-    sqlc generate
-    wails3 dev
 
 # Run code generation and build the app
 build:
@@ -13,8 +9,18 @@ build:
 # Run all linters and type checkers
 check: _check-frontend _check-go
 
+# Run code generation and start dev server
+dev:
+    sqlc generate
+    wails3 dev
+
 # Format all source code
 fmt: _fmt-frontend _fmt-go
+
+# Generate sqlc & wails bindings
+gen:
+    sqlc generate
+    wails3 generate bindings
 
 # Run all tests
 test: _test-go

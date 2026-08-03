@@ -17,3 +17,5 @@ SELECT * FROM conversations ORDER BY updated_at DESC;
 -- name: UpdateConversationUpdatedAt :exec
 UPDATE conversations SET updated_at = ? WHERE id = ?;
 
+-- name: DeleteConversation :exec
+DELETE FROM conversations WHERE id = ?;

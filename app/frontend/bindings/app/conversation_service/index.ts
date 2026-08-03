@@ -8,5 +8,6 @@ export {
 
 export type {
     ConversationResponse,
-    CreateConversationRequest
+    CreateConversationRequest,
+    DeleteConversationRequest
 } from "./models.js";

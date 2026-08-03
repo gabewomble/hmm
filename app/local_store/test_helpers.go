@@ -15,6 +15,11 @@ func NewTestStore(t *testing.T) *LocalStore {
 	}
 	t.Cleanup(func() { db.Close() })
 
+	// Enable foreign_keys
+	if _, err := db.Exec("PRAGMA foreign_keys = ON"); err != nil {
+		t.Fatalf("failed to enable foreign_keys: %v", err)
+	}
+
 	store := &LocalStore{db: db, queries: New(db)}
 
 	if err := store.runMigrations(false); err != nil {

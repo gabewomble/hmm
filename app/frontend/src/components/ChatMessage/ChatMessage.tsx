@@ -1,5 +1,5 @@
 import { Paper, Text } from "@mantine/core";
-import { MessageType } from "../../../bindings/app/storage/models";
+import { MessageType } from "#bindings/app/storage/models";
 import classes from "./ChatMessage.module.css";
 
 interface ChatMessageProps {

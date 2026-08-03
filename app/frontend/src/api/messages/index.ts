@@ -1,10 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { MessageService } from "../../../bindings/app/message_service";
-import type { CreateMessageRequest } from "../../../bindings/app/message_service/models";
+import type { DeleteConversationRequest } from "#bindings/app/conversation_service";
+import { MessageService } from "#bindings/app/message_service";
+import type {
+	CreateMessageRequest,
+	MessageResponse,
+} from "#bindings/app/message_service/models";
+import type { ValueOf } from "#src/types/helpers";
+import type { IMutationOptions } from "../types";
+
+export const MESSAGE_QUERY_KEY = {
+	LIST_MESSAGES_BY_CONVERSATION: "ListMessagesByConversation",
+} as const;
+
+export type MessageQueryKey = ValueOf<typeof MESSAGE_QUERY_KEY>;
 
 export function useMessages(conversationId: string | undefined) {
 	return useQuery({
-		queryKey: ["messages", conversationId],
+		queryKey: [MESSAGE_QUERY_KEY.LIST_MESSAGES_BY_CONVERSATION, conversationId],
 		queryFn: () => {
 			if (!conversationId) {
 				throw new Error("conversationId is required");
@@ -15,16 +27,31 @@ export function useMessages(conversationId: string | undefined) {
 	});
 }
 
-export function useCreateMessage() {
-	const queryClient = useQueryClient();
+export function useCreateMessage(
+	options?: IMutationOptions<MessageResponse, DeleteConversationRequest>,
+) {
+	const invalidateConversationMessages = useInvalidateConversationMessages();
 
 	return useMutation({
 		mutationFn: (input: CreateMessageRequest) =>
 			MessageService.CreateMessage(input),
-		onSuccess: (_data, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: ["messages", variables.conversationId],
-			});
+		onSuccess: (data, variables) => {
+			invalidateConversationMessages(variables.conversationId);
+			options?.onSuccess?.(data, variables);
 		},
+		onError: options?.onError,
 	});
+}
+
+function useInvalidateConversationMessages() {
+	const queryClient = useQueryClient();
+
+	return (conversationId: string) => {
+		queryClient.invalidateQueries({
+			queryKey: [
+				MESSAGE_QUERY_KEY.LIST_MESSAGES_BY_CONVERSATION,
+				conversationId,
+			],
+		});
+	};
 }

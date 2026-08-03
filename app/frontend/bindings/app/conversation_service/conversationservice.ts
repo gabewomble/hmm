@@ -17,6 +17,13 @@ export function CreateConversation(input: $models.CreateConversationRequest): $C
 }
 
 /**
+ * Deletes a conversation
+ */
+export function DeleteConversation(input: $models.DeleteConversationRequest): $CancellablePromise<void> {
+    return $Call.ByID(2681103028, input);
+}
+
+/**
  * Lists conversations
  */
 export function ListConversations(): $CancellablePromise<$models.ConversationResponse[] | null> {

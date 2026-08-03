@@ -19,9 +19,15 @@ type CreateConversationParams struct {
 	MessageBody string
 }
 
+type DeleteConversationParams struct {
+	ConversationId string
+}
+
 type ConversationStore interface {
 	// Creates a new conversation
 	CreateConversation(ctx context.Context, params CreateConversationParams) (Conversation, error)
+	// Deletes a conversation
+	DeleteConversation(ctx context.Context, params DeleteConversationParams) error
 	// Lists conversations
 	ListConversations(ctx context.Context) ([]Conversation, error)
 }

@@ -1,6 +1,6 @@
 import { ActionIcon, Group, Stack, Text, Textarea } from "@mantine/core";
 import { Send } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router";
 import { useCreateMessage, useMessages } from "../../api/messages";
 import ChatMessage from "../../components/ChatMessage/ChatMessage";
@@ -11,17 +11,6 @@ export default function ConversationView() {
 	const { data: messages, isLoading } = useMessages(id);
 	const createMessage = useCreateMessage();
 	const [input, setInput] = useState("");
-	const viewportRef = useRef<HTMLDivElement>(null);
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: Need to scroll when messages change
-	useEffect(() => {
-		if (viewportRef.current) {
-			viewportRef.current.scrollTo({
-				top: viewportRef.current.scrollHeight,
-				behavior: "smooth",
-			});
-		}
-	}, [messages?.length]);
 
 	const handleSubmit = () => {
 		if (!input.trim() || !id) return;
@@ -45,7 +34,7 @@ export default function ConversationView() {
 
 	return (
 		<Stack className={classes.container} gap={0}>
-			<div ref={viewportRef} className={classes.messagesArea}>
+			<div className={classes.messagesArea}>
 				{isLoading ? (
 					<Text c="dimmed">Loading messages...</Text>
 				) : !messages || messages.length === 0 ? (

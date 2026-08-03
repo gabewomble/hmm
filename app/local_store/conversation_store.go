@@ -66,6 +66,11 @@ func (s *LocalStore) CreateConversation(ctx context.Context, params storage.Crea
 	return toStorageConversation(result), nil
 }
 
+// Deletes a conversation
+func (s *LocalStore) DeleteConversation(ctx context.Context, params storage.DeleteConversationParams) error {
+	return s.queries.DeleteConversation(ctx, params.ConversationId)
+}
+
 // Lists conversations
 func (s *LocalStore) ListConversations(ctx context.Context) ([]storage.Conversation, error) {
 	result, err := s.queries.ListConversations(ctx)

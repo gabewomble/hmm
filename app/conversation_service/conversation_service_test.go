@@ -14,6 +14,7 @@ type mockConversationStore struct {
 	nextID        int
 	createErr     error
 	listErr       error
+	deleteErr     error
 }
 
 func newMockConversationStore() *mockConversationStore {
@@ -35,6 +36,14 @@ func (m *mockConversationStore) CreateConversation(_ context.Context, params sto
 	}
 	m.conversations[c.ID] = c
 	return c, nil
+}
+
+func (m *mockConversationStore) DeleteConversation(_ context.Context, params storage.DeleteConversationParams) error {
+	if m.deleteErr != nil {
+		return m.deleteErr
+	}
+
+	return nil
 }
 
 func (m *mockConversationStore) ListConversations(_ context.Context) ([]storage.Conversation, error) {
@@ -121,5 +130,26 @@ func TestListConversations_Empty(t *testing.T) {
 	}
 	if len(list) != 0 {
 		t.Errorf("expected 0 conversations, got %d", len(list))
+	}
+}
+
+func TestDeleteConversation(t *testing.T) {
+	store := newMockConversationStore()
+	svc := New(store)
+
+	err := svc.DeleteConversation(DeleteConversationRequest{ConversationId: "conversation-id"})
+	if err != nil {
+		t.Fatalf("DeleteConversation failed: %v", err)
+	}
+}
+
+func TestDeleteConversation_Error(t *testing.T) {
+	store := newMockConversationStore()
+	store.deleteErr = errors.New("db error")
+	svc := New(store)
+
+	err := svc.DeleteConversation(DeleteConversationRequest{ConversationId: "conversation-id"})
+	if err == nil {
+		t.Fatalf("expected error, got nil")
 	}
 }
