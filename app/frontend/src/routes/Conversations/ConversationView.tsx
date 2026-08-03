@@ -1,16 +1,30 @@
-import { ActionIcon, Group, Stack, Text, Textarea } from "@mantine/core";
-import { Send } from "lucide-react";
+import { ActionIcon, Group, Menu, Stack, Text, Textarea } from "@mantine/core";
+import { MoreVertical, Send, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import {
+	useConversations,
+	useDeleteConversation,
+} from "../../api/conversations";
 import { useCreateMessage, useMessages } from "../../api/messages";
 import ChatMessage from "../../components/ChatMessage/ChatMessage";
+import ContentNavBar from "../../components/ContentNavBar";
 import classes from "./ConversationView.module.css";
 
 export default function ConversationView() {
+	const navigate = useNavigate();
+
 	const { id } = useParams<{ id: string }>();
+
 	const { data: messages, isLoading } = useMessages(id);
+	const { data: conversations } = useConversations();
+
 	const createMessage = useCreateMessage();
+	const deleteConversation = useDeleteConversation();
+
 	const [input, setInput] = useState("");
+
+	const conversation = conversations?.find((c) => c.id === id);
 
 	const handleSubmit = () => {
 		if (!input.trim() || !id) return;
@@ -32,8 +46,44 @@ export default function ConversationView() {
 		}
 	};
 
+	const handleDelete = () => {
+		if (!id) return;
+		deleteConversation.mutate(
+			{ conversationId: id },
+			{
+				onSuccess: () => {
+					navigate("/conversations/new");
+				},
+			},
+		);
+	};
+
+	const actions = (
+		<Menu position="bottom-end" shadow="md">
+			<Menu.Target>
+				<ActionIcon variant="subtle" aria-label="Conversation options">
+					<MoreVertical size={20} />
+				</ActionIcon>
+			</Menu.Target>
+			<Menu.Dropdown>
+				<Menu.Item
+					color="red"
+					leftSection={<Trash2 size={16} />}
+					onClick={handleDelete}
+				>
+					Delete conversation
+				</Menu.Item>
+			</Menu.Dropdown>
+		</Menu>
+	);
+
 	return (
 		<Stack className={classes.container} gap={0}>
+			<ContentNavBar
+				title={conversation?.name ?? "Conversation"}
+				actions={actions}
+			/>
+
 			<div className={classes.messagesArea}>
 				{isLoading ? (
 					<Text c="dimmed">Loading messages...</Text>

@@ -23,7 +23,7 @@ gen:
     wails3 generate bindings
 
 # Run all tests
-test: _test-go
+test: _test-frontend _test-go
 
 [working-directory: 'frontend']
 _check-frontend:
@@ -32,6 +32,10 @@ _check-frontend:
 [working-directory: 'frontend']
 _fmt-frontend:
     npm run check -- --write
+
+[working-directory: 'frontend']
+_test-frontend:
+    npm run test -- --run
 
 _check-go:
     go vet ./...

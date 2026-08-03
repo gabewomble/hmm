@@ -1,12 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { DeleteConversationRequest } from "#bindings/app/conversation_service";
 import { MessageService } from "#bindings/app/message_service";
-import type {
-	CreateMessageRequest,
-	MessageResponse,
-} from "#bindings/app/message_service/models";
+import type { CreateMessageRequest } from "#bindings/app/message_service/models";
 import type { ValueOf } from "#src/types/helpers";
-import type { IMutationOptions } from "../types";
 
 export const MESSAGE_QUERY_KEY = {
 	LIST_MESSAGES_BY_CONVERSATION: "ListMessagesByConversation",
@@ -27,19 +22,15 @@ export function useMessages(conversationId: string | undefined) {
 	});
 }
 
-export function useCreateMessage(
-	options?: IMutationOptions<MessageResponse, DeleteConversationRequest>,
-) {
+export function useCreateMessage() {
 	const invalidateConversationMessages = useInvalidateConversationMessages();
 
 	return useMutation({
 		mutationFn: (input: CreateMessageRequest) =>
 			MessageService.CreateMessage(input),
-		onSuccess: (data, variables) => {
+		onSuccess: (_data, variables) => {
 			invalidateConversationMessages(variables.conversationId);
-			options?.onSuccess?.(data, variables);
 		},
-		onError: options?.onError,
 	});
 }
 
